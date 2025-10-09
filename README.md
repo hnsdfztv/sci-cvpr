@@ -5,19 +5,19 @@
 
 
 
-<img src="Figs/Firstfig.png" width="900px"/> 
+<img src="TPAMI/Figs/Firstfig.png" width="900px"/> 
 <p style="text-align:justify">Convolutional Neural Networks (CNNs) have shown significant success in the low-light image enhancement task. However, most of existing works encounter challenges in balancing quality and efficiency simultaneously. This limitation hinders practical applicability in real-world scenarios and downstream vision tasks. To overcome these obstacles, we propose a Self-Calibrated Illumination (SCI) learning scheme, introducing a new perspective to boost the model’s capability. Based on a weight-sharing illumination estimation process, we construct an embedded self-calibrator to accelerate stage-level convergence, yielding gains that utilize only a single basic block for inference, which drastically diminishes computation cost. Additionally, by introducing the additivity condition on the basic block, we acquire a reinforced version dubbed SCI++, which disentangles the relationship between the self-calibrator and illumination estimator, providing a more interpretable and effective learning paradigm with faster convergence and better stability. We assess the proposed enhancers on standard benchmarks and in-the-wild datasets, confirming that they can restore clean images from diverse scenes with higher quality and efficiency. The verification on different levels of low-light vision tasks shows our applicability against other methods..</p>
 
 
 ## Self-Calibrated Illumination (SCI) Learning Framework
-<img src="Figs/Flowchart.png" width="900px"/> 
+<img src="TPAMI/Figs/Flowchart.png" width="900px"/> 
 <p style="text-align:justify">The entire framework of SCI. In the training phase, our SCI is composed of the illumination estimation and self-calibrated module. The self-calibrated module map is added to the original low-light input as the input of the illumination estimation at the next stage. Note that these two modules are respectively shared parameters in the whole training procedure. In the testing phase, we just utilize a single illumination estimation module.</p>
 
 
 ## Additivity condition into the illumination estimator (SCI++)
-<img src="Figs/SCI++.png" width="900px"/> 
+<img src="TPAMI/Figs/SCI++.png" width="900px"/> 
 <p style="text-align:justify"> Comparing the flowchart between the original method (i.e., SCI) and its reinforced version (i.e., SCI++). By enforcing the additivity condition into the illumination estimator, the self-calibrator undergoes a transition from being embedded to becoming independent and gains the advantage of active customized length for self-calibrator.</p>
-<img src="Figs/Convergence.png" width="900px"/> 
+<img src="TPAMI/Figs/Convergence.png" width="900px"/> 
 <p style="text-align:justify"> Comparing convergence behaviors between SCI and SCI++.</p>
 
 ## Experiments
@@ -30,19 +30,19 @@
 
 
 ## Results on Low-light Image Enhancement
-<img src="Figs/LLIE_1.png" width="900px"/> 
-<img src="Figs/LLIE_2.png" width="900px"/> 
+<img src="TPAMI/Figs/LLIE_1.png" width="900px"/> 
+<img src="TPAMI/Figs/LLIE_2.png" width="900px"/> 
 
 ## Results on Downstream Tasks
 
 ### Quantitative results
-<img src="Figs/down1.png" width="900px"/>
+<img src="TPAMI/Figs/down1.png" width="900px"/>
 
 ### Detection & Segmentation
-<img src="Figs/down2.png" width="900px"/> 
+<img src="TPAMI/Figs/down2.png" width="900px"/> 
 
 ### New Perspective Generation
-<img src="Figs/down3.png" width="900px"/> 
+<img src="TPAMI/Figs/down3.png" width="900px"/> 
 
 
 ## Citation
@@ -65,3 +65,4 @@
   year={2022}
 }
 ```
+
