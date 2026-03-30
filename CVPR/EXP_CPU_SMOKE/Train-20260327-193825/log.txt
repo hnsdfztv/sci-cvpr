@@ -1,0 +1,16 @@
+2026-03-27 19:38:25,862 train file name = ('D:\\Zi_Liao\\LEARING\\DL\\reproduce\\dut\\SCI\\SCI\\CVPR', 'train.py')
+2026-03-27 19:38:25,868 device = cpu
+2026-03-27 19:38:25,868 args = Namespace(batch_size=1, cuda=True, gpu='0', device='cpu', seed=2, epochs=1, lr=0.0003, stage=3, save='EXP_CPU_SMOKE/Train-20260327-193825', train_data_path='./data/medium', test_data_path='./data/medium')
+2026-03-27 19:38:25,878 model size = 0.005877
+2026-03-27 19:38:31,188 train-epoch 000 000 22.104021
+2026-03-27 19:38:47,207 train-epoch 000 001 12.551896
+2026-03-27 19:38:55,084 train-epoch 000 002 12.755222
+2026-03-27 19:39:16,164 train-epoch 000 003 10.591240
+2026-03-27 19:39:24,578 train-epoch 000 004 11.102722
+2026-03-27 19:39:32,516 train-epoch 000 005 9.991573
+2026-03-27 19:39:49,926 train-epoch 000 006 13.408342
+2026-03-27 19:39:55,792 train-epoch 000 007 8.360926
+2026-03-27 19:40:08,648 train-epoch 000 008 5.960008
+2026-03-27 19:40:26,671 train-epoch 000 009 7.213253
+2026-03-27 19:40:26,713 train-epoch 000 11.403920
+2026-03-27 19:40:26,917 train 000 7.213253

@@ -13,13 +13,18 @@ from multi_read_data import MemoryFriendlyLoader
 
 parser = argparse.ArgumentParser("SCI")
 parser.add_argument('--batch_size', type=int, default=1, help='batch size')
-parser.add_argument('--steps', type=float, default=100, help='finetune steps')
-parser.add_argument('--cuda', default=True, type=bool, help='Use CUDA to train model')
+parser.add_argument('--steps', type=int, default=100, help='finetune steps')
+parser.add_argument('--cuda', default=True, type=bool,
+                    help='Use CUDA to train model')
 parser.add_argument('--gpu', type=str, default='0', help='gpu device id')
+parser.add_argument('--device', type=str, default='cpu',
+                    help='device for finetune: cpu or cuda')
 parser.add_argument('--lr', type=float, default=0.0005, help='learning rate')
 parser.add_argument('--seed', type=int, default=2, help='random seed')
-parser.add_argument('--save', type=str, default='results/finetune/', help='location of the data corpus')
-parser.add_argument('--model', type=str, default='./weights/difficult.pt', help='location of the data corpus')
+parser.add_argument('--save', type=str, default='results/finetune/',
+                    help='location of the data corpus')
+parser.add_argument('--model', type=str, default='./weights/difficult.pt',
+                    help='location of the data corpus')
 
 args = parser.parse_args()
 
@@ -40,40 +45,46 @@ else:
 def save_images(tensor, path):
     image_numpy = tensor[0].cpu().float().numpy()
     image_numpy = (np.transpose(image_numpy, (1, 2, 0)))
-    im = Image.fromarray(np.clip(image_numpy * 255.0, 0, 255.0).astype('uint8'))
+    im = Image.fromarray(
+        np.clip(image_numpy * 255.0, 0, 255.0).astype('uint8'))
     im.save(path, 'png')
 
 
 def main():
-    if not torch.cuda.is_available():
-        logging.info('no gpu device available')
-        sys.exit(1)
+    device = torch.device(args.device)
+    if device.type == 'cuda' and not torch.cuda.is_available():
+        print('cuda is not available, fallback to cpu')
+        device = torch.device('cpu')
 
     np.random.seed(args.seed)
-    cudnn.benchmark = True
+    cudnn.benchmark = device.type == 'cuda'
     torch.manual_seed(args.seed)
-    cudnn.enabled = True
-    torch.cuda.manual_seed(args.seed)
-    logging.info('gpu device = %s' % args.gpu)
+    cudnn.enabled = device.type == 'cuda'
+    if device.type == 'cuda':
+        torch.cuda.manual_seed(args.seed)
+    logging.info('device = %s', device)
     logging.info("args = %s", args)
 
-    model = Finetunemodel(args.model)
-    model = model.cuda()
+    model = Finetunemodel(args.model, map_location=device)
+    model = model.to(device)
 
-    optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, betas=(0.9, 0.999), weight_decay=3e-4)
+    optimizer = torch.optim.Adam(
+        model.parameters(), lr=args.lr, betas=(0.9, 0.999), weight_decay=3e-4)
 
     train_low_data_names = './data/finetune'
-    TrainDataset = MemoryFriendlyLoader(img_dir=train_low_data_names, task='train')
+    TrainDataset = MemoryFriendlyLoader(
+        img_dir=train_low_data_names, task='train')
     test_low_data_names = './data/finetune'
-    TestDataset = MemoryFriendlyLoader(img_dir=test_low_data_names, task='test')
+    TestDataset = MemoryFriendlyLoader(
+        img_dir=test_low_data_names, task='test')
 
     train_queue = torch.utils.data.DataLoader(
         TrainDataset, batch_size=args.batch_size,
-        pin_memory=True, num_workers=0, shuffle=True)
+        pin_memory=device.type == 'cuda', num_workers=0, shuffle=True)
 
     test_queue = torch.utils.data.DataLoader(
         TestDataset, batch_size=1,
-        pin_memory=True, num_workers=0, shuffle=True)
+        pin_memory=device.type == 'cuda', num_workers=0, shuffle=True)
 
     total_step = 0
 
@@ -82,7 +93,7 @@ def main():
 
         for batch_idx, (input, _) in enumerate(train_queue):
             total_step += 1
-            input = Variable(input, requires_grad=False).cuda()
+            input = Variable(input, requires_grad=False).to(device)
 
             optimizer.zero_grad()
 
@@ -97,11 +108,13 @@ def main():
                 model.eval()
                 with torch.no_grad():
                     for _, (input, image_name) in enumerate(test_queue):
-                        input = Variable(input).cuda()
-                        image_name = image_name[0].split('\\')[-1].split('.')[0]
+                        input = Variable(input).to(device)
+                        image_name = image_name[0].split(
+                            '\\')[-1].split('.')[0]
                         illu, ref = model(input)
 
-                        u_name = '%s.png' % (image_name + '_' + str(total_step) + '_ref_')
+                        u_name = '%s.png' % (
+                            image_name + '_' + str(total_step) + '_ref_')
                         u_path = args.save + '/' + u_name
                         save_images(ref, u_path)
 
